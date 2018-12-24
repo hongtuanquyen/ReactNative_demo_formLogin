@@ -48,7 +48,7 @@ class HomeScreen extends Component {
       }
     }
   
-    insertToDatabase = () => {
+    addItem = () => {
       if(this.state.animalName.trim() !== ''){
         animalRef.push({
           animalName: this.state.animalName
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
         <View>
           <Text>Welcome to my app</Text>
           <TextInput ref={this.textAnimals} onChangeText={(text)=>{this.setState({animalName: text})}} placeholder="Input your animal" />
-          <Button title="+" onPress={()=>{this.insertToDatabase();}} />
+          <Button title="+" onPress={()=>{this.addItem();}} />
           <FlatList
             data={this.state.animals}
             renderItem={({item}) => {
