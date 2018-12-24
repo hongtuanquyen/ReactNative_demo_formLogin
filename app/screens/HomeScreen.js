@@ -64,6 +64,7 @@ class HomeScreen extends Component {
 
     modifyItem = (key) => {
       firebaseApp.database().ref('animals/'.concat(key)).update({animalName: this.state.animalName});
+      this.setState({animalName:''});
       this.textAnimals.current.clear();
     }
 
