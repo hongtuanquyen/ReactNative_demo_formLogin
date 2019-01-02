@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {AsyncStorage, View, ActivityIndicator} from 'react-native';
 import '@firebase/auth'
-import {firebaseApp} from '../components/FirebaseConfig'
+import {firebaseApp} from './FirebaseConfig'
 
-class AuthLoadingScreen extends Component {
+class AuthLoadingComponent extends Component {
     constructor() {
       super();
       this.getAccount();
@@ -35,4 +35,4 @@ class AuthLoadingScreen extends Component {
     }
   }
 
-export default AuthLoadingScreen;
+export default AuthLoadingComponent;

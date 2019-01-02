@@ -1,0 +1,44 @@
+var express = require("express");
+var firebaseApp = require('./configs/FirebaseConfig');
+var bodyParser = require('body-parser')
+
+var app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.listen(3000);
+
+app.post('/getData', (req, res) => {
+  res.status(200).json({
+    status: 200,
+    data: "Connected"
+  });
+});
+
+app.post("/signUp", (req, res) => {
+  firebaseApp.auth.si
+  firebaseApp.auth.createUser({
+    email: req.body.email,
+    emailVerified: true,
+    // phoneNumber: "",
+    password: req.body.password,
+    // displayName: "",
+    // photoURL: "",
+    disabled: false
+  })
+  .then(() => {
+    res.status(200).json({
+      status: 200,
+      data: true
+    });
+  })
+  .catch((error) => {
+    res.status(200).json({
+      status: 200,
+      data: "khong create duoc, error: " + error
+    });    
+  })
+});

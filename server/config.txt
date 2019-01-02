@@ -1,0 +1,13 @@
+var admin = require('firebase-admin');
+var serviceAccount = require("../serviceAccount/fir-database-demo-25d37-firebase-adminsdk.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://fir-database-demo-25d37.firebaseio.com'
+});
+
+var auth = admin.auth();
+
+module.exports = {
+  auth: auth
+}

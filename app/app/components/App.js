@@ -11,16 +11,19 @@ import {AsyncStorage, Alert, Text, View, Button, ActivityIndicator} from 'react-
 import '@firebase/auth'
 import '@firebase/database';
 import { createStackNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
-import HomeScreen from '../screens/HomeScreen'
-import SignInScreen from '../screens/SignInScreen'
-import SignUpScreen from '../screens/SignUpScreen'
-import AuthLoadingScreen from '../screens/AuthLoadingScreen'
+import HomeComponent from './HomeComponent'
+import SignInComponent from './SignInComponent'
+import SignUpComponent from './SignUpComponent'
+import AuthLoadingComponent from './AuthLoadingComponent'
+import { Provider } from "react-redux";
+import configureStore from "../store/configureStore";
+const store = configureStore();
 
-const AppStack = createStackNavigator({Home: HomeScreen});
+const AppStack = createStackNavigator({Home: HomeComponent});
 const AuthStack = createStackNavigator(
   {
-    SignIn: SignInScreen, 
-    SignUp: SignUpScreen
+    SignIn: SignInComponent, 
+    SignUp: SignUpComponent
   },
   {
     initialRouteName: "SignIn"
@@ -29,7 +32,7 @@ const AuthStack = createStackNavigator(
 
 const AppContainer = createAppContainer(createSwitchNavigator(
   {
-    AuthLoading: AuthLoadingScreen,
+    AuthLoading: AuthLoadingComponent,
     App: AppStack,
     Auth: AuthStack
   },
@@ -41,7 +44,9 @@ const AppContainer = createAppContainer(createSwitchNavigator(
 export default class App extends Component {
   render() {
     return (
-      <AppContainer />
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
     );
   }
 }

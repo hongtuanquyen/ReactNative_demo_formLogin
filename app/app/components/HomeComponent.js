@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import {TextInput, FlatList, AsyncStorage, Text, View, Button} from 'react-native';
-import '@firebase/auth'
-import '@firebase/database';
-import {firebaseApp} from '../components/FirebaseConfig'
 
-const rootRef = firebaseApp.database().ref();
-const animalRef = rootRef.child('animals');
+import * as HomeActions from "@actions/homeActions";
+import { connect } from "react-redux";
 
-class HomeScreen extends Component {
+class HomeComponent extends Component {
     constructor() {
       super();
       this.state={
@@ -16,26 +13,18 @@ class HomeScreen extends Component {
       }
       this.textAnimals = React.createRef();  
     }
-
     componentDidMount() {
-      animalRef.on('value', (childSnapshot)=>{
-        const animals = [];
-        childSnapshot.forEach((doc)=>{
-          animals.push({
-            key: doc.key,
-            animalName: doc.toJSON().animalName
-          })
-        })
-        this.setState({
-          animals: animals
-        });
-      })
+      this.props.getList();
     }
-
+    
     static navigationOptions = ({navigation}) => {
       return {
         title: "Welcome to my app"  
       }
+    }
+
+    componentWillReceiveProps(props) {
+      console.log(props.homeState.listItem);
     }
     
     logout = async() => {
@@ -50,32 +39,33 @@ class HomeScreen extends Component {
   
     addItem = () => {
       if(this.state.animalName.trim() !== ''){
-        animalRef.push({
-          animalName: this.state.animalName
-        });
-        this.setState({animalName:''});
-        this.textAnimals.current.clear();
+        this.props.addItem(this.state.animalName);
       }
     }
 
     removeItem = (key) =>{
-      firebaseApp.database().ref('animals/'.concat(key)).remove();
+      this.props.removeItem(key);
     }
 
     modifyItem = (key) => {
-      firebaseApp.database().ref('animals/'.concat(key)).update({animalName: this.state.animalName});
-      this.setState({animalName:''});
-      this.textAnimals.current.clear();
+      this.props.modifyItem(key, this.state.animalName);
     }
 
     render() {
+      if(this.props.homeState != undefined && this.props.homeState.listItem != undefined) {
+        datasource = this.props.homeState.listItem;
+      }
+      else {
+        datasource = null;
+      }
       return (
         <View>
+          {/* <Text>{this.props.homeState}</Text> */}
           <Text>Welcome to my app</Text>
           <TextInput ref={this.textAnimals} onChangeText={(text)=>{this.setState({animalName: text})}} placeholder="Input your animal" />
           <Button title="+" onPress={()=>{this.addItem();}} />
           <FlatList
-            data={this.state.animals}
+            data={datasource}
             renderItem={({item}) => {
               return(
                 <View style={{flex: 1, flexDirection: 'row'}}>
@@ -92,4 +82,10 @@ class HomeScreen extends Component {
     }
   }
 
-  export default HomeScreen;
+function mapStateToProps(state) {
+  return {
+    homeState: state.homeReducer
+  };
+}
+
+export default connect(mapStateToProps, HomeActions)(HomeComponent);
